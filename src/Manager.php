@@ -22,6 +22,13 @@ trait Manager
     protected $creators = [];
 
     /**
+     * Define what each driver must implement.
+     *
+     * @return array
+     */
+    abstract public function getImplements() : array;
+
+    /**
      * Define the default driver.
      *
      * @return string
@@ -39,7 +46,17 @@ trait Manager
         $driver = $driver ?? $this->getDefaultDriver();
 
         if (! isset($this->drivers[$driver])) {
-            $this->drivers[$driver] = $this->createDriver($driver);
+            $instance = $this->createDriver($driver);
+            $implements = $this->getImplements();
+            $instanceImplements = (array) class_implements($instance);
+
+            foreach($implements as $interface){
+                if(!isset($instanceImplements[$interface])){
+                    throw new \ErrorException('Class ' . get_class($instance) . '  does not meet the Interface requirements set out in ' . self::class . '.');
+                }
+            }
+
+            $this->drivers[$driver] = $instance;
         }
         return $this->drivers[$driver];
     }

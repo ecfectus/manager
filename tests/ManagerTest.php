@@ -8,9 +8,19 @@ use PHPUnit\Framework\TestCase;
 class StubManager{
     use Manager;
 
+    public function getImplements() : array
+    {
+        return [StubInterface::class];
+    }
+
     public function getDefaultDriver() : string
     {
         return 'default';
+    }
+
+    public function createFailsDriver()
+    {
+        return new StubClassTwo();
     }
 
     public function createDefaultDriver()
@@ -19,7 +29,18 @@ class StubManager{
     }
 }
 
-class StubClass{
+interface StubInterface{
+    public function toBeCalled();
+}
+
+class StubClass implements StubInterface{
+    public function toBeCalled()
+    {
+        return 'success';
+    }
+}
+
+class StubClassTwo{
     public function toBeCalled()
     {
         return 'success';
@@ -43,7 +64,12 @@ class ManagerTest extends TestCase
 
         $manager = new StubManager();
 
-        $class = new class{};
+        $class = new class implements StubInterface{
+            public function toBeCalled()
+            {
+                return 'success';
+            }
+        };
 
         $manager->extend('name', function() use ($class){
             return $class;
@@ -69,5 +95,16 @@ class ManagerTest extends TestCase
         $manager = new StubManager();
 
         $manager->driver('doesntexist');
+    }
+
+    /**
+     * @expectedException \ErrorException
+     */
+    public function testFailureForDriverWithoutInterface()
+    {
+
+        $manager = new StubManager();
+
+        $manager->driver('fails');
     }
 }
