@@ -1,0 +1,33 @@
+{
+    "name": "ecfectus/manager",
+    "description": "A simple driver based manager trait to use multiple drivers for a set of functionality",
+    "license": "MIT",
+    "homepage": "https://github.com/ecfectus/manager",
+    "authors": [
+        {
+            "name": "leemason",
+            "email": "contact@nohalfpixels.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "^5.5.0",
+        "phpdocumentor/phpdocumentor": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ecfectus\\Manager\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ecfectus\\Manager\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "docs": "vendor/bin/phpdoc"
+    }
+}
